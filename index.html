@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <input id="nom" type="text" placeholder="nom de la personne"></input><br></br>
+        <input id="age" type="number" placeholder="0"></input><br></br>
+        <button id="clickMe" >action javascript</button>
+    </div>
+    <div id="tableau">
+
+    </div>
+    <script type="module" >
+ import { getDatabase, ref, set, push, onValue } from
+'https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js'
+        import { initializeApp } from
+'https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js'
+
+
+        function ajoutPersonne(){
+            const usersRef = ref(database, 'users')
+            const newUserRef = push(usersRef)
+            set(newUserRef,
+                {
+                    user: document.getElementById("nom").value,
+                    age: parseInt(document.getElementById("age").value)
+                }
+            )
+        }
+        document.getElementById("clickMe").onclick = ajoutPersonne;
+
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAZm4m2b5uu5vgqOqibYMe2BVlPAvJbgA4",
+            authDomain: "fir-test-dfea6.firebaseapp.com",
+            databaseURL: "https://fir-test-dfea6-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "fir-test-dfea6",
+            storageBucket: "fir-test-dfea6.appspot.com",
+            messagingSenderId: "149161499077",
+            appId: "1:149161499077:web:a068501669ee827362d3ac"
+        };
+
+                // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        console.log("app", app)
+
+        const database = getDatabase(app);
+        console.log("database", database)
+
+        onValue(ref(database, 'users'),
+            (snapshot) => {
+                const data = snapshot.val()
+                const tab = Object.values(data)
+                document.getElementById("tableau").innerHTML = tab.map(el=> "<p>" + el.user +" : "+ el.age + " ans</p>").join("")
+}
+        )
+
+
+    </script>    
+</body>
+</html>
